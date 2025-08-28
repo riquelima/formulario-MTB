@@ -1,0 +1,5 @@
+{
+  "name": "Formulário Anamnese _MTB",
+  "description": "Um formulário de 7 etapas para coleta de informações de anamnese terapêutica, com um design moderno, persistência de dados e envio para um webhook.",
+  "requestFramePermissions": []
+}
