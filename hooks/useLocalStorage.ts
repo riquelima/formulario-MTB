@@ -1,12 +1,30 @@
 import { useState, useEffect } from 'react';
 
-export const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] => {
+export const useLocalStorage = <T extends object>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] => {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      if (!item) {
+        return initialValue;
+      }
+      
+      const storedData = JSON.parse(item);
+      
+      // Merge initial data with stored data to ensure all keys are present.
+      // This is crucial for backward compatibility when the data structure changes.
+      const mergedData = { ...initialValue };
+      for (const stepKey in mergedData) {
+        if (storedData[stepKey]) {
+          mergedData[stepKey as keyof T] = {
+            ...(mergedData[stepKey as keyof T] as object),
+            ...(storedData[stepKey] as object),
+          } as T[keyof T];
+        }
+      }
+      return mergedData;
+
     } catch (error) {
-      console.error(error);
+      console.error("Error reading from localStorage, falling back to initial state:", error);
       return initialValue;
     }
   });
