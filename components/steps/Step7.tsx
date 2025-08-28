@@ -74,9 +74,9 @@ const ReviewPanel: React.FC<{ allData: FormData; goToStep: (step: number) => voi
           </div>
            <dl className="text-sm space-y-2">
              {Object.entries(section.data).filter(([key]) => !key.toLowerCase().endsWith('outro') || (key.toLowerCase().endsWith('outro') && section.data[key as keyof typeof section.data])).map(([key, value]) => (
-                <div key={key} className="grid grid-cols-3 gap-x-4 py-2 border-b border-violet-100 last:border-b-0">
+                <div key={key} className="py-2 border-b border-violet-100 last:border-b-0 sm:grid sm:grid-cols-3 sm:gap-x-4">
                     <dt className="font-medium text-slate-500">{LABELS_MAP[key] || key}</dt>
-                    <dd className="col-span-2 text-slate-800 font-medium">{renderValue(value)}</dd>
+                    <dd className="mt-1 text-slate-800 font-medium sm:mt-0 sm:col-span-2">{renderValue(value)}</dd>
                 </div>
              ))}
            </dl>

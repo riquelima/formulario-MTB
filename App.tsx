@@ -90,22 +90,25 @@ const App: React.FC = () => {
     }));
   };
 
+  const handleStepChange = (step: number) => {
+    if (step >= 1 && step <= TOTAL_STEPS) {
+      setCurrentStep(step);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const nextStep = () => {
-    if (currentStep < TOTAL_STEPS && isStepValid) {
-      setCurrentStep(currentStep + 1);
+    if (isStepValid) {
+       handleStepChange(currentStep + 1);
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
+    handleStepChange(currentStep - 1);
   };
   
   const goToStep = (step: number) => {
-    if (step >= 1 && step <= TOTAL_STEPS) {
-      setCurrentStep(step);
-    }
+    handleStepChange(step);
   };
   
   const handleSubmit = async () => {
