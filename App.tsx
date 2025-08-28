@@ -143,6 +143,7 @@ const App: React.FC = () => {
     };
 
     try {
+      // 1. Enviar para o Supabase (primário)
       const { error } = await supabase.from('anamnese').insert([dataToSubmit]);
 
       if (error) {
@@ -150,6 +151,21 @@ const App: React.FC = () => {
         throw new Error('Falha no envio. Tente novamente.');
       }
       
+      // 2. Enviar para o Webhook (secundário)
+      try {
+        await fetch('https://n8n.intelektus.tech/webhook/gatilhowhatsapp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dataToSubmit),
+        });
+      } catch (webhookError) {
+        console.error('Webhook submission failed:', webhookError);
+        // Não bloqueia a UI, apenas registra o erro
+      }
+
+      // 3. Atualizar UI para sucesso
       setIsSubmitted(true);
       localStorage.removeItem('mtb_anamnese');
 
