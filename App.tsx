@@ -19,6 +19,32 @@ const supabaseUrl = 'https://zpbndizcbcmdsjnfhgak.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwYm5kaXpjYmNtZHNqbmZoZ2FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3OTU3MzcsImV4cCI6MjA3MTM3MTczN30.5H9kYsvJRa1-VYITu_HVuO-kfYnrW3R3sPbio6sjbxw';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+interface ConfirmationProps {
+  name: string;
+}
+
+const ConfirmationScreen: React.FC<ConfirmationProps> = ({ name }) => (
+  <div className="min-h-screen bg-gradient-to-br from-[#E4DFFF] to-[#D6E4FF] flex items-center justify-center p-4">
+    <main className="w-full max-w-[720px] bg-white/50 backdrop-blur-xl rounded-3xl shadow-2xl shadow-purple-200/50 p-6 sm:p-10 text-slate-800 border border-white/30 text-center fade-in">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+        <svg className="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h1 className="mt-6 text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight leading-tight font-poppins">
+        Obrigado, <span className="text-[#8C52FF]">{name}!</span>
+      </h1>
+      <p className="mt-6 text-base text-slate-600 max-w-xl mx-auto">
+        Suas respostas foram enviadas com sucesso. Com elas, poderemos oferecer uma experiência ainda mais exclusiva e personalizada.
+      </p>
+      <p className="mt-4 text-sm text-slate-500">
+        Agradecemos a sua confiança. Em breve, continuaremos nossa conversa.
+      </p>
+    </main>
+  </div>
+);
+
+
 const App: React.FC = () => {
   const [formData, setFormData] = useLocalStorage<FormData>('mtb_anamnese', initialFormData);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -26,6 +52,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isStarted, setIsStarted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateStep = useCallback((step: number, data: FormData): boolean => {
     switch (step) {
@@ -85,7 +112,6 @@ const App: React.FC = () => {
     setIsLoading(true);
     setToast(null);
 
-    // Flatten data for Supabase table with Portuguese column names
     const dataToSubmit = {
         nome_preferido: formData.step1.nomePreferido,
         idade: formData.step1.idade === '' ? null : formData.step1.idade,
@@ -123,17 +149,9 @@ const App: React.FC = () => {
         console.error('Supabase error:', error);
         throw new Error('Falha no envio. Tente novamente.');
       }
-
-      setToast({ message: 'Formulário enviado com sucesso! Vamos continuar pelo WhatsApp.', type: 'success' });
       
-      const goalsText = formData.step1.objetivosPrincipais.slice(0, 2).join(', ');
-      const whatsappMessage = encodeURIComponent(`Olá! Sou ${formData.step1.nomePreferido}. Meus objetivos principais são: ${goalsText}`);
-      const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
-      
-      setTimeout(() => {
-        window.open(whatsappUrl, '_blank');
-        localStorage.removeItem('mtb_anamnese');
-      }, 1000);
+      setIsSubmitted(true);
+      localStorage.removeItem('mtb_anamnese');
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
@@ -155,6 +173,10 @@ const App: React.FC = () => {
       default: return null;
     }
   };
+
+  if (isSubmitted) {
+    return <ConfirmationScreen name={formData.step1.nomePreferido} />;
+  }
 
   if (!isStarted) {
     return (
