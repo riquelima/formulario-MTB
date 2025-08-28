@@ -1,6 +1,7 @@
 export interface FormData {
   step1: {
     nomePreferido: string;
+    whatsapp: string;
     idade?: number | '';
     ocupacao: string;
     ocupacaoOutro: string;

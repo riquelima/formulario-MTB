@@ -5,6 +5,7 @@ export const TOTAL_STEPS = 7;
 export const initialFormData: FormData = {
   step1: {
     nomePreferido: '',
+    whatsapp: '',
     idade: '',
     ocupacao: '',
     ocupacaoOutro: '',

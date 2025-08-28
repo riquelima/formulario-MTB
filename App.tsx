@@ -57,7 +57,8 @@ const App: React.FC = () => {
   const validateStep = useCallback((step: number, data: FormData): boolean => {
     switch (step) {
       case 1:
-        return data.step1.nomePreferido.trim() !== '' && data.step1.objetivosPrincipais.length > 0;
+        const whatsappDigits = data.step1.whatsapp.replace(/\D/g, '');
+        return data.step1.nomePreferido.trim() !== '' && whatsappDigits.length >= 10 && data.step1.objetivosPrincipais.length > 0;
       case 2:
         return data.step2.sentimentoRecente !== '' && data.step2.emocoesBloqueadoras.length > 0;
       case 3:
@@ -114,6 +115,7 @@ const App: React.FC = () => {
 
     const dataToSubmit = {
         nome_preferido: formData.step1.nomePreferido,
+        whatsapp: `55${formData.step1.whatsapp.replace(/\D/g, '')}`,
         idade: formData.step1.idade === '' ? null : formData.step1.idade,
         ocupacao: formData.step1.ocupacao,
         ocupacao_outro: formData.step1.ocupacaoOutro,

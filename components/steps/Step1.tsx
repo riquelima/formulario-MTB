@@ -15,6 +15,23 @@ const Step1: React.FC<Props> = ({ data, updateData }) => {
       : data.objetivosPrincipais.filter((goal) => goal !== value);
     updateData({ objetivosPrincipais: newGoals });
   };
+
+  const handleWhatsappChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) {
+      value = value.slice(0, 11);
+    }
+
+    if (value.length > 7) {
+      value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+    } else if (value.length > 2) {
+      value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+    } else if (value.length > 0) {
+      value = `(${value}`;
+    }
+
+    updateData({ whatsapp: value });
+  };
   
   const occupations = ["Estudante", "Autônomo(a)", "Empregado(a)", "Desempregado(a)", "Dono(a) de negócio", "Aposentado(a)", "Outros"];
   const goals = ["Melhorar relacionamento", "Autoestima/confiança", "Ansiedade/estresse", "Autoconhecimento", "Equilíbrio emocional", "Superar traumas/passado", "Outros"];
@@ -28,6 +45,17 @@ const Step1: React.FC<Props> = ({ data, updateData }) => {
           placeholder="Nome/Apelido" 
           value={data.nomePreferido}
           onChange={(e) => updateData({ nomePreferido: e.target.value })}
+        />
+      </Question>
+
+      <Question title="Seu WhatsApp">
+        <Input 
+          id="whatsapp" 
+          type="tel" 
+          placeholder="(XX) XXXXX-XXXX" 
+          value={data.whatsapp}
+          onChange={handleWhatsappChange}
+          maxLength={15}
         />
       </Question>
 

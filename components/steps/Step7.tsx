@@ -11,6 +11,7 @@ interface Props {
 
 const LABELS_MAP: { [key: string]: string } = {
   nomePreferido: "Nome Preferido",
+  whatsapp: "WhatsApp",
   idade: "Idade",
   ocupacao: "Ocupação",
   ocupacaoOutro: "Outra Ocupação",
