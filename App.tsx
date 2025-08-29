@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import type { FormData } from './types';
@@ -53,6 +53,16 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isStarted, setIsStarted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!isStarted && videoRef.current) {
+      videoRef.current.play().catch(error => {
+        // Autoplay was prevented.
+        console.warn("Video autoplay was prevented:", error);
+      });
+    }
+  }, [isStarted]);
 
   const validateStep = useCallback((step: number, data: FormData): boolean => {
     switch (step) {
@@ -203,11 +213,11 @@ const App: React.FC = () => {
     return (
       <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-4">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          poster="https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
         >
           <source src="https://cdn.pixabay.com/video/2016/09/13/5208-183786555_large.mp4" type="video/mp4" />
