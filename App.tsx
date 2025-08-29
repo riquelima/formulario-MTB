@@ -201,20 +201,30 @@ const App: React.FC = () => {
 
   if (!isStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#E4DFFF] to-[#D6E4FF] flex items-center justify-center p-4">
-        <main className="w-full max-w-[720px] bg-white/50 backdrop-blur-xl rounded-3xl shadow-2xl shadow-purple-200/50 p-6 sm:p-10 text-slate-800 border border-white/30 text-center fade-in">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight leading-tight font-poppins">
+      <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-4">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        >
+          <source src="https://cdn.pixabay.com/video/2016/09/13/5208-183786555_large.mp4" type="video/mp4" />
+          Seu navegador não suporta a tag de vídeo.
+        </video>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#E4DFFF]/50 to-[#D6E4FF]/50 z-10"></div>
+        <main className="relative z-20 w-full max-w-[720px] bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-purple-200/30 p-8 sm:p-12 text-slate-800 border border-white/50 text-center fade-in">
+           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight leading-tight font-poppins">
             Você conversa com <span className="text-[#8C52FF]">todo mundo.</span>
-          </h1>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight leading-tight font-poppins">
+            <br />
             Mas quando foi a última vez que conversou com <span className="text-[#6635F8]">você mesmo?</span>
-          </h2>
+          </h1>
           <p className="mt-6 text-base text-slate-600 max-w-xl mx-auto">
             Bem-vindo(a) à Anamnese do <strong>Meu Terapeuta de Bolso</strong>. Este é o primeiro passo para uma jornada de autoconhecimento e clareza. Suas respostas são confidenciais e essenciais para personalizar sua experiência.
           </p>
           <button
             onClick={() => setIsStarted(true)}
-            className="mt-8 px-10 py-4 rounded-full text-lg font-semibold text-white bg-[#8C52FF] hover:bg-[#6635F8] transition-all duration-300 ease-in-out shadow-lg shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/50 transform hover:-translate-y-1"
+            className="mt-8 px-10 py-4 rounded-full text-lg font-semibold text-white bg-gradient-to-r from-[#8C52FF] to-[#6635F8] hover:from-[#7a48e6] hover:to-[#5c2fdd] transition-all duration-300 ease-in-out shadow-lg shadow-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/60 transform hover:-translate-y-1"
           >
             Começar minha jornada
           </button>
