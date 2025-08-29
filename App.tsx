@@ -207,6 +207,7 @@ const App: React.FC = () => {
           loop
           muted
           playsInline
+          poster="https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
         >
           <source src="https://cdn.pixabay.com/video/2016/09/13/5208-183786555_large.mp4" type="video/mp4" />
