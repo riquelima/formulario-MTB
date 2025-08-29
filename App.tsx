@@ -53,14 +53,20 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isStarted, setIsStarted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (!isStarted && videoRef.current) {
-      videoRef.current.play().catch(error => {
-        // Autoplay was prevented.
-        console.warn("Video autoplay was prevented:", error);
-      });
+      const videoElement = videoRef.current;
+      const playPromise = videoElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // Autoplay was prevented by the browser.
+          console.warn("Video autoplay was prevented, showing fallback:", error);
+          setIsVideoPlaying(false); // Trigger the static background fallback.
+        });
+      }
     }
   }, [isStarted]);
 
@@ -211,19 +217,18 @@ const App: React.FC = () => {
 
   if (!isStarted) {
     return (
-      <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-4">
+      <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-4 bg-gradient-to-br from-[#E4DFFF] to-[#D6E4FF]">
         <video
           ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+          className={`absolute top-0 left-0 w-full h-full object-cover z-0 transition-opacity duration-500 ${isVideoPlaying ? 'opacity-100' : 'opacity-0'}`}
         >
           <source src="https://cdn.pixabay.com/video/2016/09/13/5208-183786555_large.mp4" type="video/mp4" />
-          Seu navegador não suporta a tag de vídeo.
         </video>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#E4DFFF]/50 to-[#D6E4FF]/50 z-10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/10 z-10"></div>
         <main className="relative z-20 w-full max-w-[720px] bg-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-purple-200/30 p-8 sm:p-12 text-slate-800 border border-white/50 text-center fade-in">
            <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight leading-tight font-poppins">
             Você conversa com <span className="text-[#8C52FF]">todo mundo.</span>
