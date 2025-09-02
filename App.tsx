@@ -96,6 +96,14 @@ const App: React.FC = () => {
     setIsStepValid(validateStep(currentStep, formData));
   }, [currentStep, formData, validateStep]);
   
+  useEffect(() => {
+    // Scrolls to the top of the page when the step changes for a smoother navigation experience.
+    // This effect only runs after the form has been started by the user.
+    if (isStarted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentStep]);
+  
   const handleDataChange = <T extends keyof FormData>(step: T, data: Partial<FormData[T]>) => {
     setFormData(prev => ({
       ...prev,
@@ -109,7 +117,6 @@ const App: React.FC = () => {
   const handleStepChange = (step: number) => {
     if (step >= 1 && step <= TOTAL_STEPS) {
       setCurrentStep(step);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
